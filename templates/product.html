@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>{% include '_head.html' %}<title>{{ product.name }} — FITGEAR</title></head>
+<body>
+{% include '_nav.html' %}
+<main class="product-page">
+  <div class="product-detail">
+    <div class="detail-image"><img src="{{ product.image }}" alt="{{ product.name }}"></div>
+    <div class="detail-copy">
+      <span class="kicker">{{ category_names[product.category] }}</span>
+      <h1>{{ product.name }}</h1>
+      <div class="rating">
+        {% if review_count %}{{ '★' * (avg_rating|round(0,'floor')|int) }}<span>{{ avg_rating }}/5 · {{ review_count }} review{% if review_count != 1 %}s{% endif %}</span>
+        {% else %}<span class="no-rating">No reviews yet</span>{% endif %}
+      </div>
+      <div class="detail-price"><strong>EGP {{ '{:,}'.format(product.price) }}</strong></div>
+      <p>{{ product.description }}</p>
+      <ul><li>Designed for regular training</li><li>Durable materials and easy care</li><li>Fast delivery across Egypt</li></ul>
+      <button class="btn btn-accent add-cart" data-id="{{ product.id }}" data-name="{{ product.name }}" data-price="{{ product.price }}" data-image="{{ product.image }}">Add to cart <b>+</b></button>
+      <a class="back-link" href="{{ url_for('shop', category=product.category) }}">← Back to {{ category_names[product.category] }}</a>
+    </div>
+  </div>
+
+  <section class="reviews-section" id="reviews">
+    <div class="section-label"><span>REVIEWS</span><h2>What customers say</h2><span class="review-count-label">{{ review_count }} review{% if review_count != 1 %}s{% endif %}</span></div>
+
+    {% with messages=get_flashed_messages() %}
+      {% if messages %}<div class="flash">{{ messages[0] }}</div>{% endif %}
+    {% endwith %}
+
+    <div class="review-layout">
+      <div class="review-form-card">
+        {% if current_user %}
+          <span class="kicker">SHARE YOUR EXPERIENCE</span>
+          <h3>How was this item?</h3>
+          <p>You're signed in as <strong>{{ current_user['name'] }}</strong>. You can leave one review for this product. A profile photo is required to publish it.</p>
+          <form method="post" action="{{ url_for('add_review', product_id=product.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label>Rating
+              <select name="rating" required>
+                <option value="">Choose a rating</option>
+                <option value="5">★★★★★ — Excellent</option>
+                <option value="4">★★★★☆ — Good</option>
+                <option value="3">★★★☆☆ — Average</option>
+                <option value="2">★★☆☆☆ — Poor</option>
+                <option value="1">★☆☆☆☆ — Very poor</option>
+              </select>
+            </label>
+            <label>Comment
+              <textarea name="comment" maxlength="1000" required placeholder="Tell us about the quality, fit or how you use it..."></textarea>
+            </label>
+            <button class="btn btn-accent" type="submit">Post review →</button>
+          </form>
+        {% else %}
+          <span class="kicker">MEMBERS ONLY</span>
+          <h3>Have this item?</h3>
+          <p>You need a FITGEAR account and must be logged in before you can leave a review.</p>
+          <a class="btn btn-accent" href="{{ url_for('login', next=url_for('product', product_id=product.id)) }}">Log in to review →</a>
+          <a class="review-signup" href="{{ url_for('signup') }}">Don't have an account? Create one</a>
+        {% endif %}
+      </div>
+
+      <div class="review-list">
+        {% if reviews %}
+          {% for review in reviews %}
+          <article class="review-card">
+            <div class="review-top">
+              <div class="review-author">
+                {% if review['profile_photo'] %}
+                  <img class="review-avatar" src="{{ url_for('static', filename='uploads/profiles/' ~ review['profile_photo']) }}" alt="{{ review['name'] }} profile photo">
+                {% else %}
+                  <div class="review-avatar review-avatar-placeholder">{{ review['name'][0]|upper }}</div>
+                {% endif %}
+                <div><strong>{{ review['name'] }}</strong><span class="review-date">{{ review['created_at'][:10] }}</span></div>
+              </div>
+              <span class="review-stars">{{ '★' * review['rating'] }}{{ '☆' * (5-review['rating']) }}</span>
+            </div>
+            <p>{{ review['comment'] }}</p>
+          </article>
+          {% endfor %}
+        {% else %}
+          <div class="empty reviews-empty"><h3>No reviews yet.</h3><p>Be the first FITGEAR member to share your experience.</p></div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="related"><div class="section-label"><span>YOU MAY ALSO LIKE</span><a href="{{ url_for('shop') }}">Shop all ↗</a></div><div class="product-grid">{% for p in related %}{% include '_product_card.html' %}{% endfor %}</div></section>
+</main>
+{% include '_footer.html' %}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body></html>

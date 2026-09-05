@@ -1,0 +1,16 @@
+<!doctype html><html lang="en"><head>{% include '_head.html' %}<title>FITGEAR — Train Better. Live Stronger.</title></head><body>
+{% include '_nav.html' %}
+<main>
+<section class="hero"><div class="hero-grid"><div class="hero-copy"><span class="kicker">TRAIN BETTER · LIVE STRONGER</span><h1>Gear that keeps<br><span>you moving.</span></h1><p>Practical fitness accessories for home sessions, gym days and everything between.</p><div class="hero-actions"><a class="btn btn-accent" href="{{ url_for('shop') }}">Shop all gear <b>↗</b></a><a class="ghost-link" href="#categories">Explore categories ↓</a></div><div class="hero-stats"><div><b>18 items</b><span>Fitness essentials</span></div><div><b>30 days</b><span>Easy returns</span></div><div><b>Egypt-wide</b><span>Delivery</span></div></div></div><div class="hero-art"><div class="hero-photo"><img src="https://images.pexels.com/photos/28805366/pexels-photo-28805366.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Athlete training in a modern gym"></div><div class="hero-note">BUILT FOR<br><strong>YOUR ROUTINE</strong></div></div></div></section>
+<section class="category-wrap" id="categories"><div class="section-label"><span>01</span><h2>Shop by movement</h2><a href="{{ url_for('shop') }}">View all gear ↗</a></div><div class="category-grid">
+{% for key,name,url in [
+('bands','Resistance Bands','https://images.pexels.com/photos/31467579/pexels-photo-31467579.jpeg?auto=compress&cs=tinysrgb&w=700'),
+('mats','Yoga Mats','https://images.pexels.com/photos/8539115/pexels-photo-8539115.jpeg?auto=compress&cs=tinysrgb&w=700'),
+('bags','Gym Bags','https://images.pexels.com/photos/8554900/pexels-photo-8554900.jpeg?auto=compress&cs=tinysrgb&w=700'),
+('shakers','Shakers','https://images.pexels.com/photos/16513595/pexels-photo-16513595.jpeg?auto=compress&cs=tinysrgb&w=700'),
+('gloves','Training Gloves','https://images.pexels.com/photos/7697774/pexels-photo-7697774.jpeg?auto=compress&cs=tinysrgb&w=700'),
+('rollers','Foam Rollers','https://images.pexels.com/photos/4804294/pexels-photo-4804294.jpeg?auto=compress&cs=tinysrgb&w=700')
+] %}<a class="category-card" href="{{ url_for('shop', category=key) }}"><div class="category-image"><img src="{{ url }}" alt="{{ name }}" loading="lazy"></div><div><span>0{{ loop.index }}</span><h3>{{ name }}</h3><b>Shop now →</b></div></a>{% endfor %}
+</div></section>
+<section class="featured"><div class="section-label"><span>02</span><h2>Best sellers</h2><a href="{{ url_for('shop') }}">See collection ↗</a></div><div class="product-grid">{% for p in products %}{% include '_product_card.html' %}{% endfor %}</div></section>
+</main>{% include '_footer.html' %}<script src="{{ url_for('static', filename='script.js') }}"></script></body></html>

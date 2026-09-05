@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>{% include '_head.html' %}<title>Join FITGEAR</title></head>
+<body>{% include '_nav.html' %}
+<main class="auth-page">
+  <div class="auth-shell">
+    <div class="auth-visual">
+      <span class="kicker">FITGEAR / 01</span>
+      <h1>Train with<br><em>purpose.</em></h1>
+      <p>Create your FITGEAR account. Your profile photo can be added anytime after you sign in.</p>
+      <div class="auth-visual-stats"><span>18 products</span><span>Real reviews</span><span>Egypt delivery</span></div>
+    </div>
+    <div class="auth-form-panel">
+      <div class="auth-form-inner">
+        <span class="kicker">FITGEAR CLUB</span>
+        <h2>Create your account.</h2>
+        <p>Use your email address to create your FITGEAR account.</p>
+        {% with messages=get_flashed_messages() %}{% if messages %}<div class="flash">{{ messages[0] }}</div>{% endif %}{% endwith %}
+        <form method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <label>Full name<input name="name" type="text" maxlength="80" required autocomplete="name"></label>
+          <label>Username<input name="username" type="text" minlength="3" maxlength="30" pattern="[A-Za-z0-9_.-]{3,30}" required autocomplete="username" placeholder="e.g. mohamed_fit"></label>
+          <small class="field-help">3–30 characters: letters, numbers, dots, dashes or underscores.</small>
+          <label>Email<input name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+          <label>Password<input name="password" type="password" minlength="8" required autocomplete="new-password"></label>
+          <small class="field-help">At least 8 characters with a letter and a number.</small>
+          <button class="btn btn-accent auth-submit">Create account<b>→</b></button>
+        </form>
+        <p class="auth-switch">Already a member? <a href="{{ url_for('login') }}">Log in</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+</body></html>

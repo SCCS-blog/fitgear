@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>{% include '_head.html' %}<title>Account — FITGEAR</title></head>
+<body>{% include '_nav.html' %}
+<main class="auth-page">
+  <div class="profile-card account-profile-card">
+    <div class="profile-heading">
+      {% if user['profile_photo'] %}
+        <img class="profile-avatar-large" src="{{ url_for('static', filename='uploads/profiles/' ~ user['profile_photo']) }}" alt="{{ user['name'] }} profile photo">
+      {% else %}
+        <div class="profile-avatar-large profile-avatar-placeholder">{{ user['name'][0]|upper }}</div>
+      {% endif %}
+      <div><span class="kicker">MY FITGEAR</span><h1>Hey, {{ user['name'] }}.</h1><p>@{{ user['username'] }} · {{ user['email'] }}</p></div>
+    </div>
+    {% with messages=get_flashed_messages() %}{% if messages %}<div class="flash">{{ messages[0] }}</div>{% endif %}{% endwith %}
+    {% if not user['profile_photo'] %}
+      <div class="photo-required"><strong>Add your profile photo</strong><p>Your photo is optional for your account, but required before you can publish a product review. It will appear beside your name on your reviews.</p></div>
+    {% endif %}
+    <form class="profile-photo-form" method="post" action="{{ url_for('update_profile_photo') }}" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label>Profile photo<input name="profile_photo" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+      <small class="field-help">JPG, PNG or WEBP · max 5 MB</small>
+      <button class="btn btn-accent" type="submit">{% if user['profile_photo'] %}Change photo{% else %}Upload photo{% endif %} →</button>
+    </form>
+    <div class="profile-actions"><a class="btn btn-outline" href="{{ url_for('shop') }}">Shop gear</a><a class="btn btn-outline" href="{{ url_for('logout') }}">Log out</a></div>
+  </div>
+</main>
+</body></html>
